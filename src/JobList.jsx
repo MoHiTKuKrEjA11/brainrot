@@ -16,7 +16,7 @@ const JobList = () => {
   const fetchJobs = async () => {
     const options = {
       method: "GET",
-      url: import.meta.env.VITE_API,
+      url: import.meta.env.VITE_URL,
       params: {
         query: jobTitle || "developer",
         page: "1",
@@ -24,9 +24,9 @@ const JobList = () => {
         country: country || "IN",
       },
       headers: {
-        "x-rapidapi-key": "73bcc2c20dmsh27a3e6a28707be9p1abd5fjsn3e6ce6e670fb",
-        "x-rapidapi-host": "jsearch.p.rapidapi.com",
-      },
+        'x-rapidapi-key': import.meta.env.VITE_API_KEY,
+        'x-rapidapi-host': 'jsearch.p.rapidapi.com'
+      }
     };
 
     setLoading(true);
