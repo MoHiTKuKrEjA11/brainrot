@@ -1,76 +1,76 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+  const [country, setCountry] = useState(""); 
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-        const options = {
-            method: 'GET',
-            url: 'https://jsearch.p.rapidapi.com/search',
-            params: {
-              query: 'developer jobs in chicago',
-              page: '3',
-              num_pages: '3',
-              country: 'us',
-              date_posted: 'all'
-            },
-            headers: {
-              'x-rapidapi-key': '73bcc2c20dmsh27a3e6a28707be9p1abd5fjsn3e6ce6e670fb',
-              'x-rapidapi-host': 'jsearch.p.rapidapi.com'
-            }
-          };
-
-      try {
-        const response = await axios.request(options);
-        setJobs(response.data.data || []);
-      } catch (err) {
-        setError("Failed to fetch jobs. Please try again.");
-      } finally {
-        setLoading(false);
-      }
+  const fetchJobs = async () => {
+    const options = {
+      method: "GET",
+      url: "https://jsearch.p.rapidapi.com/search",
+      params: {
+        query: jobTitle,
+        page: "1",
+        num_pages: "1",
+        country: country,
+      },
+      headers: {
+        "x-rapidapi-key": "73bcc2c20dmsh27a3e6a28707be9p1abd5fjsn3e6ce6e670fb",
+        "x-rapidapi-host": "jsearch.p.rapidapi.com",
+      },
     };
 
-    fetchJobs();
-  }, []);
+    setLoading(true);
+    setError("");
 
-  if (loading) return <div>Loading jobs...</div>;
-//   if (error) return <div>{error}</div>;
+    try {
+      const response = await axios.request(options);
+      setJobs(response.data.data || []);
+    } catch (err) {
+      setError("Failed to fetch jobs. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="bg-gray-900 min-h-screen">
-      {/* Search bar */}
-      <div className="search-bar flex items-center justify-between bg-gray-900 p-4 rounded-md mb-6">
+    <div className="bg-gray-900 min-h-screen text-white p-6">
+      <div className="search-bar flex flex-wrap items-center justify-between bg-gray-900 p-4 rounded-md mb-6 gap-4">
         <input
           type="text"
           placeholder="Search Job Title"
-          className="bg-gray-800 text-white p-2 rounded-md w-1/4"
+          value={jobTitle}
+          onChange={(e) => setJobTitle(e.target.value)}
+          className="bg-gray-800 text-white p-2 rounded-md w-full md:w-1/3"
         />
-        <input
-          type="text"
-          placeholder="Search Company"
-          className="bg-gray-800 text-white p-2 rounded-md w-1/4"
-        />
-        <input
-          type="text"
-          placeholder="Search Location"
-          className="bg-gray-800 text-white p-2 rounded-md w-1/4"
-        />
-        <select className="bg-gray-800 text-white p-2 rounded-md w-1/6">
-          <option value="all">Date Posted</option>
-          <option value="last24hours">Last 24 hours</option>
-          <option value="last3days">Last 3 days</option>
-          <option value="last7days">Last 7 days</option>
+        <select
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          className="bg-gray-800 text-white p-2 rounded-md w-full md:w-1/4"
+        >
+          <option value="IN">India</option>
+          <option value="US">United States</option>
+          <option value="GB">England</option>
+          <option value="AU">Australia</option>
         </select>
+        <button
+          onClick={fetchJobs}
+          className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-2 rounded-md"
+        >
+          Search
+        </button>
       </div>
-
-      {/* Job Listings */}
       <div>
-        <h1 className="text-2xl font-bold mb-4 text-white">Job Listings</h1>
-        {jobs.length === 0 ? (
+        <h1 className="text-2xl font-bold mb-4">Job Listings</h1>
+        {loading ? (
+          <div>Loading jobs...</div>
+        ) : error ? (
+          <div className="text-red-500">{error}</div>
+        ) : jobs.length === 0 ? (
           <div>No jobs found</div>
         ) : (
           <ul className="space-y-4">
@@ -79,9 +79,9 @@ const JobList = () => {
                 key={index}
                 className="p-4 border border-gray-700 rounded-lg bg-gray-900 hover:bg-gray-800 transition"
               >
-                <h2 className="text-lg font-semibold text-white">{job.job_title}</h2>
+                <h2 className="text-lg font-semibold">{job.job_title}</h2>
                 <p className="text-gray-400">{job.employer_name}</p>
-                <p className="text-gray-400">{job.location}</p>
+                <p className="text-gray-400">{job.job_location}</p>
                 <p className="text-sm text-gray-500">
                   Posted on: {new Date(job.date_posted).toDateString()}
                 </p>
