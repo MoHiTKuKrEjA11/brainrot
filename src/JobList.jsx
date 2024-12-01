@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const JobList = () => {
@@ -8,15 +8,20 @@ const JobList = () => {
   const [jobTitle, setJobTitle] = useState("");
   const [country, setCountry] = useState(""); 
 
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+  
+
   const fetchJobs = async () => {
     const options = {
       method: "GET",
-      url: "https://jsearch.p.rapidapi.com/search",
+      url: import.meta.env.VITE_API,
       params: {
-        query: jobTitle,
+        query: jobTitle || "developer",
         page: "1",
         num_pages: "1",
-        country: country,
+        country: country || "IN",
       },
       headers: {
         "x-rapidapi-key": "73bcc2c20dmsh27a3e6a28707be9p1abd5fjsn3e6ce6e670fb",
@@ -38,19 +43,20 @@ const JobList = () => {
   };
 
   return (
-    <div className="bg-gray-900 min-h-screen text-white p-6">
-      <div className="search-bar flex flex-wrap items-center justify-between bg-gray-900 p-4 rounded-md mb-6 gap-4">
+    <div className="bg-[#020202] min-h-screen text-white p-6">
+      
+      <div className="search-bar flex flex-wrap items-center justify-evenly bg-[#020202] p-4 rounded-md mb-6 gap-4">
         <input
           type="text"
           placeholder="Search Job Title"
           value={jobTitle}
           onChange={(e) => setJobTitle(e.target.value)}
-          className="bg-gray-800 text-white p-2 rounded-md w-full md:w-1/3"
+          className="bg-[#020202] text-white border-2 border-white p-2 rounded-md w-full md:w-1/3"
         />
         <select
           value={country}
           onChange={(e) => setCountry(e.target.value)}
-          className="bg-gray-800 text-white p-2 rounded-md w-full md:w-1/4"
+          className="bg-[#020202] text-white border-2 border-white p-2 rounded-md w-full md:w-1/4"
         >
           <option value="IN">India</option>
           <option value="US">United States</option>
@@ -59,7 +65,7 @@ const JobList = () => {
         </select>
         <button
           onClick={fetchJobs}
-          className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-2 rounded-md"
+          className="bg-blue-600 hover:bg-blue-700  transition text-white px-6 py-2 rounded-md"
         >
           Search
         </button>
@@ -77,14 +83,11 @@ const JobList = () => {
             {jobs.map((job, index) => (
               <li
                 key={index}
-                className="p-4 border border-gray-700 rounded-lg bg-gray-900 hover:bg-gray-800 transition"
+                className="p-4 border border-zinc-500 rounded-lg bg-[#020202] hover:bg-[#121212] transition"
               >
                 <h2 className="text-lg font-semibold">{job.job_title}</h2>
                 <p className="text-gray-400">{job.employer_name}</p>
                 <p className="text-gray-400">{job.job_location}</p>
-                <p className="text-sm text-gray-500">
-                  Posted on: {new Date(job.date_posted).toDateString()}
-                </p>
                 <a
                   href={job.job_apply_link}
                   target="_blank"
