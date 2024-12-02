@@ -10,7 +10,7 @@ import JobList from './JobList';
             <Routes>
                 <Route exact path='/' element={<Homepage />}></Route>
                 <Route exact path='/internships' element={<JobList />}></Route>
-                {/* <Route path=''></Route> */}
+                <Route exact path='/newgrad' element={<JobList />}></Route>
             </Routes>
         </BrowserRouter>
         </>

@@ -3,12 +3,6 @@ import "./styles.css";
 import { useNavigate } from "react-router-dom";
 
 const Homepage = () => {
-  // useEffect(() => {
-  //   const videoElement = document.querySelector(".background-video");
-  //   if (videoElement) {
-  //     videoElement.playbackRate = 0.5; // Adjust the playback speed (e.g., 0.5 for slower playback)
-  //   }
-  // }, []);
   const navigate = useNavigate();
 
   return (
@@ -21,8 +15,8 @@ const Homepage = () => {
       <div className="content">
         <h1>Find your next opportunity</h1>
         <div className="buttons">
-          <button className="btn white-btn" onClick={() => navigate("/internships")}>New Grad →</button>
-          <button className="btn black-btn">Internships →</button>
+          <button className="btn white-btn" onClick={() => navigate("/newgrad")}>New Grad →</button>
+          <button className="btn white-btn" onClick={() => navigate("/internships")}>Internships →</button>
         </div>
       </div>
 
